@@ -22,16 +22,24 @@ namespace DetailedDescriptions.Systems
         protected virtual void AddTextToAllDescriptions()
         {
         
-        }
-        
-        protected void AddTextToName(string prefabName, string text)
+        protected void AddTextToName(string prefabName, string text, string separator = " ")
         {
-            if (LocalizationManager.activeDictionary.TryGetValue($"Assets.NAME[{prefabName}]", out var entry))
+            if (
+                LocalizationManager.activeDictionary.TryGetValue(
+                    $"Assets.NAME[{prefabName}]",
+                    out var entry
+                )
+            )
             {
-                if (string.IsNullOrEmpty(entry)) return;
-                string newDescription = $"{entry}\r\n{text}";
-                if (entry.Contains(text)) return;
-                LocalizationManager.activeDictionary.Add($"Assets.NAME[{prefabName}]", newDescription);
+                if (string.IsNullOrEmpty(entry))
+                    return;
+                string newDescription = $"{entry}{separator}{text}";
+                if (entry.Contains(text))
+                    return;
+                LocalizationManager.activeDictionary.Add(
+                    $"Assets.NAME[{prefabName}]",
+                    newDescription
+                );
             }
         }
 
@@ -51,8 +59,21 @@ namespace DetailedDescriptions.Systems
             AddTextToAllDescriptions();
         }
 
+        private string lastLocale = string.Empty;
+
         private void OnActiveDictionaryChanged()
         {
+            string currentLocale = GameManager
+                .instance
+                .localizationManager
+                .activeDictionary
+                .localeID;
+            if (lastLocale == currentLocale)
+                return;
+            lastLocale = currentLocale;
+#if DEBUG
+            Mod.log.Info("OnActiveDictionaryChanged");
+#endif
             AddTextToAllDescriptions();
         }
         
