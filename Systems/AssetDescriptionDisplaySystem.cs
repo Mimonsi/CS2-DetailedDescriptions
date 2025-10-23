@@ -23,6 +23,17 @@ namespace DetailedDescriptions.Systems
         {
         
         }
+        
+        protected void AddTextToName(string prefabName, string text)
+        {
+            if (LocalizationManager.activeDictionary.TryGetValue($"Assets.NAME[{prefabName}]", out var entry))
+            {
+                if (string.IsNullOrEmpty(entry)) return;
+                string newDescription = $"{entry}\r\n{text}";
+                if (entry.Contains(text)) return;
+                LocalizationManager.activeDictionary.Add($"Assets.NAME[{prefabName}]", newDescription);
+            }
+        }
 
         protected void AddTextToDescription(string prefabName, string text)
         {

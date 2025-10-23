@@ -38,6 +38,7 @@ namespace DetailedDescriptions
             updateSystem.UpdateAt<BuildingLotSizeSystem>(SystemUpdatePhase.MainLoop);
             updateSystem.UpdateAt<BuildingWorkplacesSystem>(SystemUpdatePhase.MainLoop);
             updateSystem.UpdateAt<SpeedLimitSystem>(SystemUpdatePhase.MainLoop);
+            updateSystem.UpdateAt<VehicleCapacitySystem>(SystemUpdatePhase.MainLoop);
         }
 
         public void OnDispose()

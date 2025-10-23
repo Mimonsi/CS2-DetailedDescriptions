@@ -19,7 +19,6 @@ namespace DetailedDescriptions
         Mph
     }
     
-    //[FileLocation($"ModsSettings/{nameof(DetailedDescriptions)}/{nameof(DetailedDescriptions)}")]
     [FileLocation("ModsSettings/DetailedDescriptions/DetailedDescriptions")]
     [SettingsUIGroupOrder(kSettingsGroup, kDescriptionsGroup)]
     [SettingsUIShowGroupName(kSettingsGroup, kDescriptionsGroup)]
@@ -42,7 +41,7 @@ namespace DetailedDescriptions
             set
             {
                 Mod.ApplySettingsChanges();
-                Mod.ReloadActiveLocale();
+                //Mod.ReloadActiveLocale();
             }
         }
     
@@ -80,6 +79,12 @@ namespace DetailedDescriptions
         [SettingsUISection(kMainSection, kDescriptionsGroup)]
         [SettingsUIHideByCondition(typeof(Setting), nameof(ShowRoadSpeedLimit), true)]
         public SpeedUnitSetting RoadSpeedLimitUnit { get; set; } = SpeedUnitSetting.Default;
+        
+        [SettingsUISection(kMainSection, kDescriptionsGroup)]
+        public bool ShowPublicTransportCapacity { get; set; } = true;
+        
+        [SettingsUISection(kMainSection, kDescriptionsGroup)]
+        public bool AvoidPublicTransportCapacityDuplication { get; set; } = true;
     
         #endregion
 

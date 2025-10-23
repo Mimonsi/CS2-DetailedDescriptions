@@ -35,14 +35,16 @@ Thanks to StarQ for assisting with the implementation.
 	<Screenshot Value="Properties/DetailedDescriptions.png" />
 	<Screenshot Value="Properties/Screenshot1.png" />
 	<Screenshot Value="Properties/Screenshot2.png" />
+	<Screenshot Value="Properties/Screenshot3.png" />
+	<Screenshot Value="Properties/Screenshot4.png" />
 	<!--Tag, can be set multiple times-->
 	<Tag Value="Code Mod" />
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/detailed-descriptions.1732226/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.1.2" />
+	<ModVersion Value="1.1.3" />
 	<!--Recommended version of the base game to use the mod-->
-	<GameVersion Value="1.2.*" />
+	<GameVersion Value="1.3.6*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Required DLC, can be set multiple times. Supported values are "Landmark Buildings", "San Fransisco Set", "Beach Properties", "Urban Promenades", "Modern Architecture"-->
@@ -50,12 +52,12 @@ Thanks to StarQ for assisting with the implementation.
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<!--<ChangeLog Value="" />-->
 	<ChangeLog>
-- Fix long loading times due to log spam
-- Add Settings to choose unit for lot size and speed limit
+- Recompiled for Patch 1.3.6f1
+- Added display for public transport vehicle capacity
 	</ChangeLog>
 	<!--External link, can be set multiple times. supported types are "discord", "github", "youtube", "twitch", "x", "paypal", "patreon", "buymeacoffee", "kofi", "crowdin", "gitlab", "gofundme"-->
 	<ExternalLink Type="github" Url="https://github.com/Mimonsi/CS2-DetailedDescriptions" />
 	<ExternalLink Type="discord" Url="https://discord.gg/vd7HXnpPJf" />
 	<ExternalLink Type="paypal" Url="https://www.paypal.com/paypalme/KonstantinSchwarze" />
-	<ExternalLink Type="ko-fi" Url="https://ko-fi.com/mimonsi" />
+	<ExternalLink Type="kofi" Url="https://ko-fi.com/mimonsi" />
 </Publish>

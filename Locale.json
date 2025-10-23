@@ -24,5 +24,9 @@
     "Options.OPTION_DESCRIPTION[DetailedDescriptions.DetailedDescriptions.Mod.Setting.RoadSpeedLimitUnit]": "Select the unit for speed limit. Default will use the value you set in your unit settings of the game",
     "Options.DetailedDescriptions.DetailedDescriptions.Mod.SPEEDUNITSETTING[Default]": "Default",
     "Options.DetailedDescriptions.DetailedDescriptions.Mod.SPEEDUNITSETTING[Kph]": "km/h",
-    "Options.DetailedDescriptions.DetailedDescriptions.Mod.SPEEDUNITSETTING[Mph]": "mph"
+    "Options.DetailedDescriptions.DetailedDescriptions.Mod.SPEEDUNITSETTING[Mph]": "mph",
+    "Options.OPTION[DetailedDescriptions.DetailedDescriptions.Mod.Setting.ShowPublicTransportCapacity]": "Show Public Transport Capacity",
+    "Options.OPTION_DESCRIPTION[DetailedDescriptions.DetailedDescriptions.Mod.Setting.ShowPublicTransportCapacity]": "Shows vehicle capacity for public transport vehicles in the line vehicle selection",
+    "Options.OPTION[DetailedDescriptions.DetailedDescriptions.Mod.Setting.AvoidPublicTransportCapacityDuplication]": "Avoid Duplicate Display",
+    "Options.OPTION_DESCRIPTION[DetailedDescriptions.DetailedDescriptions.Mod.Setting.AvoidPublicTransportCapacityDuplication]": "If the vehicle prefab name already contains the capacity e.g. 'Bus (50)', it will not be shown again"
 }

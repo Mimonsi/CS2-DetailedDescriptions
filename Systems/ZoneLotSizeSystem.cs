@@ -31,23 +31,36 @@ namespace DetailedDescriptions.Systems
         protected override void AddTextToAllDescriptions()
         {
             if (!Setting.Instance.ShowZoneLotSizes) return;
-            
+
+            ZoneLots.Clear();
             var allSpawnableBuildings = _spawnableBuildings.ToEntityArray(Allocator.Temp);
             foreach (Entity entity in allSpawnableBuildings)
             {
-                _prefabSystem.TryGetPrefab(entity, out PrefabBase bldgPrefab);
-                BuildingPrefab buildingPrefab = (BuildingPrefab)bldgPrefab;
-                if (bldgPrefab.TryGet(out SpawnableBuilding sbd) && buildingPrefab is not null)
+                if (_prefabSystem.TryGetPrefab(entity, out PrefabBase prefabBase) && prefabBase is not null)
                 {
-                    string zoneName = sbd.m_ZoneType?.GetPrefabID().ToString() ?? "";
-                    if (!ZoneLots.ContainsKey(zoneName))
+                    BuildingPrefab buildingPrefab = (BuildingPrefab)prefabBase;
+                    if (buildingPrefab.TryGet(out SpawnableBuilding sbd))
                     {
-                        ZoneLots[zoneName] = new List<(int, int)>();
+                        if (sbd.m_ZoneType == null)
+                        {
+                            Mod.log.Info("Zone type is null for entity: " + entity);
+                            continue;
+                        }
+                        string zoneName = sbd.m_ZoneType.GetPrefabID().ToString() ?? "";
+                        if (!ZoneLots.ContainsKey(zoneName))
+                        {
+                            ZoneLots[zoneName] = new List<(int, int)>();
+                        }
+                        ZoneLots[zoneName].Add((buildingPrefab.m_LotWidth, buildingPrefab.m_LotDepth));
                     }
-                    ZoneLots[zoneName].Add((buildingPrefab.m_LotWidth, buildingPrefab.m_LotDepth));
+                }
+                else
+                {
+                    Mod.log.Info("Failed to get building prefab for entity: " + entity);
                 }
             }
-            
+
+            Mod.log.Info("Zone Count: " + ZoneLots.Count);
             foreach (var item in ZoneLots)
             {
                 string zoneName = item.Key.Replace("ZonePrefab:","");
