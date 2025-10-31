@@ -1,6 +1,7 @@
 ﻿using Colossal.IO.AssetDatabase;
 using Game.Modding;
 using Game.Settings;
+using Game.UI.Widgets;
 
 namespace DetailedDescriptions
 {
@@ -40,8 +41,8 @@ namespace DetailedDescriptions
         {
             set
             {
+                Mod.ReloadActiveLocale();
                 Mod.ApplySettingsChanges();
-                //Mod.ReloadActiveLocale();
             }
         }
     
@@ -82,8 +83,36 @@ namespace DetailedDescriptions
         
         [SettingsUISection(kMainSection, kDescriptionsGroup)]
         public bool ShowPublicTransportCapacity { get; set; } = true;
+
+        [SettingsUISection(kMainSection, kDescriptionsGroup)]
+        [SettingsUIDropdown(typeof(Setting), nameof(GetPublicTransportCapacityFormatItems))]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPublicTransportCapacity), true)]
+        public string PublicTransportCapacityFormat { get; set; } = "{name} ({capacity} {amount})";
+
+        public DropdownItem<string>[] GetPublicTransportCapacityFormatItems()
+        {
+            return new DropdownItem<string>[]
+            {
+                new()
+                {
+                    value = " ({capacity} {amount})",
+                    displayName = "Bus (Capacity 50)"
+                },
+                new()
+                {
+                    value = " ({amount} {capacity})",
+                    displayName = "Bus (50 Capacity)"
+                },
+                new()
+                {
+                    value = " [{amount} {passengers}]",
+                    displayName = "Bus [50 Passengers]"
+                },
+            };
+        }
         
         [SettingsUISection(kMainSection, kDescriptionsGroup)]
+        [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPublicTransportCapacity), true)]
         public bool AvoidPublicTransportCapacityDuplication { get; set; } = true;
     
         #endregion

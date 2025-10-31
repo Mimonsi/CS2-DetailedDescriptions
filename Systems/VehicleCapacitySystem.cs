@@ -65,7 +65,7 @@ namespace DetailedDescriptions.Systems
                 {
                     passenger.x += data.m_PassengerCapacity;
                     passenger.y += data.m_PassengerCapacity;
-                    for (int i = 0; i < buffer.Capacity; i++)
+                    for (int i = 0; i < buffer.Length; i++)
                     {
                         var carriage = buffer[i];
                         if (
@@ -106,19 +106,15 @@ namespace DetailedDescriptions.Systems
                 )
                     // Don't add capacity if it's already in the name in some way
                     continue;
+                
+                string format = Setting.Instance.PublicTransportCapacityFormat;
 
-                string capacityText =
-                    LocaleHelper.Translate("DetailedDescriptions.Mod.CapacityText") ?? "Capacity";
-                string currentFormat = " ({capacityText}{separator}{amount})"; // to be retrieved from settings dropdown
-                //string currentFormat = " [{amount}{separator}{capacityText}]"; // to be retrieved from settings dropdown
-                string separator = " ";
-
-                string textSuffix = currentFormat
-                    .Replace("{capacityText}", capacityText)
-                    .Replace("{separator}", separator)
+                string text = format
+                    .Replace("{capacity}", LocaleHelper.Translate("InfoPanels.CAPACITY")?.Replace(":", "") ?? "Capacity")
+                    .Replace("{passengers}", LocaleHelper.Translate("SelectedInfoPanel.PASSENGERS_TITLE") ?? "Passengers")
                     .Replace("{amount}", amount);
 
-                AddTextToName(prefabName, textSuffix);
+                AddTextToName(prefabName, text);
             }
         }
 

@@ -27,7 +27,8 @@
   "Options.DetailedDescriptions.DetailedDescriptions.Mod.SPEEDUNITSETTING[Mph]": "mph",
   "Options.OPTION[DetailedDescriptions.DetailedDescriptions.Mod.Setting.ShowPublicTransportCapacity]": "Show Public Transport Capacity",
   "Options.OPTION_DESCRIPTION[DetailedDescriptions.DetailedDescriptions.Mod.Setting.ShowPublicTransportCapacity]": "Shows vehicle capacity for public transport vehicles in the line vehicle selection",
+  "Options.OPTION[DetailedDescriptions.DetailedDescriptions.Mod.Setting.PublicTransportCapacityFormat]": "Public Transport Capacity Format",
+  "Options.OPTION_DESCRIPTION[DetailedDescriptions.DetailedDescriptions.Mod.Setting.PublicTransportCapacityFormat]": "Choose the format to display the capacity",
   "Options.OPTION[DetailedDescriptions.DetailedDescriptions.Mod.Setting.AvoidPublicTransportCapacityDuplication]": "Avoid Duplicate Display",
-  "Options.OPTION_DESCRIPTION[DetailedDescriptions.DetailedDescriptions.Mod.Setting.AvoidPublicTransportCapacityDuplication]": "If the vehicle prefab name already contains the capacity e.g. 'Bus (Capacity 50)', it will not be shown again",
-  "DetailedDescriptions.Mod.CapacityText": "Capacity"
+  "Options.OPTION_DESCRIPTION[DetailedDescriptions.DetailedDescriptions.Mod.Setting.AvoidPublicTransportCapacityDuplication]": "If the vehicle prefab name already contains the capacity e.g. 'Bus (Capacity 50)', it will not be shown again"
 }
