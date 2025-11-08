@@ -39,7 +39,7 @@ namespace DetailedDescriptions.Systems
                 if (EntityManager.TryGetComponent(entity, out RoadData roadData))
                 {
                     // Half speed limit
-                    roadData.m_SpeedLimit /= 2;
+                    //roadData.m_SpeedLimit /= 2;
                     //EntityManager.SetComponentData(entity, roadData);
                     //EntityManager.AddComponent<BatchesUpdated>(entity);
                     

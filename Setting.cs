@@ -87,7 +87,7 @@ namespace DetailedDescriptions
         [SettingsUISection(kMainSection, kDescriptionsGroup)]
         [SettingsUIDropdown(typeof(Setting), nameof(GetPublicTransportCapacityFormatItems))]
         [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPublicTransportCapacity), true)]
-        public string PublicTransportCapacityFormat { get; set; } = "{name} ({capacity} {amount})";
+        public string PublicTransportCapacityFormat { get; set; } = "({capacity} {amount})";
 
         public DropdownItem<string>[] GetPublicTransportCapacityFormatItems()
         {
