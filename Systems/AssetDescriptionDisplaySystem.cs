@@ -2,6 +2,7 @@
 using Game;
 using Game.Prefabs;
 using Game.SceneFlow;
+using Game.UI.Menu;
 using Unity.Entities;
 
 namespace DetailedDescriptions.Systems
@@ -60,11 +61,11 @@ namespace DetailedDescriptions.Systems
                 .localizationManager
                 .activeDictionary
                 .localeID;
-            if (lastLocale == currentLocale)
-                return;
+            //if (lastLocale == currentLocale)
+            //    return;
             lastLocale = currentLocale;
 #if DEBUG
-            Mod.log.Info("OnActiveDictionaryChanged");
+            Mod.log.Debug("OnActiveDictionaryChanged");
 #endif
             AddTextToAllDescriptions();
         }

@@ -33,6 +33,7 @@ namespace DetailedDescriptions
             
             AssetDatabase.global.LoadSettings(nameof(DetailedDescriptions), m_Setting, new Setting(this));
             Setting.Instance = m_Setting;
+            m_Setting.onSettingsApplied += ApplySettingsChanged;
             
             updateSystem.UpdateAt<ZoneLotSizeSystem>(SystemUpdatePhase.MainLoop);
             updateSystem.UpdateAt<BuildingLotSizeSystem>(SystemUpdatePhase.MainLoop);
@@ -41,19 +42,24 @@ namespace DetailedDescriptions
             updateSystem.UpdateAt<VehicleCapacitySystem>(SystemUpdatePhase.MainLoop);
         }
 
+        private void ApplySettingsChanged(Game.Settings.Setting setting)
+        {
+            OnSettingsChanged?.Invoke();
+            Mod.log.Debug("OnSettingsChanged called by Apply");
+            //OnSettingsChanged?.Invoke();
+        }
+
         public void OnDispose()
         {
             log.Info(nameof(OnDispose));
         }
 
-        public static void ApplySettingsChanges()
-        {
-            OnSettingsChanged?.Invoke();
-        }
-
         public static void ReloadActiveLocale()
         {
             GameManager.instance.localizationManager.ReloadActiveLocale();
+            OnSettingsChanged?.Invoke();
+            Mod.log.Debug("OnSettingsChanged called by ReloadActiveLocale");
+            
         }
     }
 }

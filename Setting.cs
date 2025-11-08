@@ -32,19 +32,18 @@ namespace DetailedDescriptions
         public Setting(IMod mod) : base(mod)
         {
         }
-        // TODO: Add settings to use Metric, US Customary, or default units
 
         #region General Settings
 
-        [SettingsUISection(kMainSection, kSettingsGroup)]
+        /*[SettingsUISection(kMainSection, kSettingsGroup)]
         public bool ApplyChanges
         {
             set
             {
-                Mod.ReloadActiveLocale();
+                //Mod.ReloadActiveLocale();
                 Mod.ApplySettingsChanges();
             }
-        }
+        }*/
     
         [SettingsUISection(kMainSection, kSettingsGroup)]
         public bool ReloadActiveLocale
@@ -87,7 +86,7 @@ namespace DetailedDescriptions
         [SettingsUISection(kMainSection, kDescriptionsGroup)]
         [SettingsUIDropdown(typeof(Setting), nameof(GetPublicTransportCapacityFormatItems))]
         [SettingsUIHideByCondition(typeof(Setting), nameof(ShowPublicTransportCapacity), true)]
-        public string PublicTransportCapacityFormat { get; set; } = "({capacity} {amount})";
+        public string PublicTransportCapacityFormat { get; set; } = " ({capacity} {amount})";
 
         public DropdownItem<string>[] GetPublicTransportCapacityFormatItems()
         {
