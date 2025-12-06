@@ -36,7 +36,7 @@ namespace DetailedDescriptions.Systems
             }
         }
 
-        protected void AddTextToDescription(string prefabName, string text)
+        protected void AddTextToDescription(string prefabName, string text, bool debugOutput = false)
         {
             if (LocalizationManager.activeDictionary.TryGetValue($"Assets.DESCRIPTION[{prefabName}]", out var entry))
             {
@@ -44,6 +44,11 @@ namespace DetailedDescriptions.Systems
                 string newDescription = $"{entry}\r\n{text}";
                 if (entry.Contains(text)) return;
                 LocalizationManager.activeDictionary.Add($"Assets.DESCRIPTION[{prefabName}]", newDescription);
+            }
+            else
+            {
+                if (debugOutput)
+                    Mod.log.Warn($"Could not get description for prefab: '{prefabName}'");
             }
         }
     

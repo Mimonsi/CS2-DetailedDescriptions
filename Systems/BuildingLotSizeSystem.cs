@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Colossal.Core;
 using Colossal.Entities;
 using DetailedDescriptions.Helpers;
 using Game.Prefabs;
@@ -19,17 +20,7 @@ namespace DetailedDescriptions.Systems
                 All = new [] { ComponentType.ReadWrite<BuildingData>() }
             });
 
-            /*var buildings = _buildingsQuery.ToEntityArray(Allocator.Temp);
-            foreach (Entity entity in buildings)
-            {
-                if (EntityManager.TryGetComponent(entity, out BuildingData buildingData))
-                {
-                    string prefabName = PrefabSystem.GetPrefabName(entity);
-                    BuildingLots.Add(prefabName, (buildingData.m_LotSize.x, buildingData.m_LotSize.y));
-                }
-            }*/
-
-            GameManager.instance.RegisterUpdater(AddTextToAllDescriptions);
+            MainThreadDispatcher.RegisterUpdater(AddTextToAllDescriptions);
             Mod.log.Info("BuildingLotSizeSystem initialized");
         }
 

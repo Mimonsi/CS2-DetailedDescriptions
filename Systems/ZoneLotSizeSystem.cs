@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Colossal.Core;
 using Colossal.Localization;
 using Game;
 using Game.Prefabs;
@@ -24,13 +25,15 @@ namespace DetailedDescriptions.Systems
                 All = new [] { ComponentType.ReadWrite<SpawnableBuildingData>() }
             });
 
-            GameManager.instance.RegisterUpdater(AddTextToAllDescriptions);
+            MainThreadDispatcher.RegisterUpdater(AddTextToAllDescriptions);
             Mod.log.Info("ZoneLotSizeSystem initialized");
         }
         
         protected override void AddTextToAllDescriptions()
         {
             if (!Setting.Instance.ShowZoneLotSizes) return;
+            
+            Mod.log.Info("VehicleCapacitySystem AddTextToAllDescriptions");
 
             ZoneLots.Clear();
             var allSpawnableBuildings = _spawnableBuildings.ToEntityArray(Allocator.Temp);
@@ -46,7 +49,7 @@ namespace DetailedDescriptions.Systems
                             Mod.log.Info("Zone type is null for entity: " + entity);
                             continue;
                         }
-                        string zoneName = sbd.m_ZoneType.GetPrefabID().ToString() ?? "";
+                        string zoneName = sbd.m_ZoneType.GetPrefabID().GetName() ?? "";
                         if (!ZoneLots.ContainsKey(zoneName))
                         {
                             ZoneLots[zoneName] = new List<(int, int)>();
@@ -60,7 +63,7 @@ namespace DetailedDescriptions.Systems
                 }
             }
 
-            Mod.log.Info("Zone Count: " + ZoneLots.Count);
+            Mod.log.Trace("Zone Count: " + ZoneLots.Count);
             foreach (var item in ZoneLots)
             {
                 string zoneName = item.Key.Replace("ZonePrefab:","");
@@ -78,6 +81,7 @@ namespace DetailedDescriptions.Systems
                     : sortedLots.FirstOrDefault() ?? "";
                 
                 string localizedText = LocalizationProvider.GetLocalizedText(LocalizationManager.activeLocaleId).Replace("%data%", lotSize);
+                Mod.log.Trace($"Zone {zoneName} Text: {localizedText}");
                 
                 AddTextToDescription(zoneName, localizedText);
             }

@@ -53,6 +53,16 @@ namespace DetailedDescriptions
                 Mod.ReloadActiveLocale();
             }
         }
+        
+        /*[SettingsUISection(kMainSection, kSettingsGroup)]
+        public bool ExportAllLocalization
+        {
+            set
+            {
+                Mod.ExportAllLocalization();
+            }
+        }*/
+
 
         #endregion
     

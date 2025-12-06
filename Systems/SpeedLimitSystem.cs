@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Colossal.Core;
 using Colossal.Entities;
 using DetailedDescriptions.Helpers;
 using Game.Common;
@@ -20,7 +21,7 @@ namespace DetailedDescriptions.Systems
                 All = new [] { ComponentType.ReadWrite<RoadData>() }
             });
 
-            GameManager.instance.RegisterUpdater(AddTextToAllDescriptions);
+            MainThreadDispatcher.RegisterUpdater(AddTextToAllDescriptions);
             Mod.log.Info("SpeedLimitSystem initialized");
         }
 
@@ -38,8 +39,8 @@ namespace DetailedDescriptions.Systems
             {
                 if (EntityManager.TryGetComponent(entity, out RoadData roadData))
                 {
-                    // Half speed limit
-                    //roadData.m_SpeedLimit /= 2;
+                    // Half speed limit to show correct values
+                    roadData.m_SpeedLimit /= 2;
                     //EntityManager.SetComponentData(entity, roadData);
                     //EntityManager.AddComponent<BatchesUpdated>(entity);
                     

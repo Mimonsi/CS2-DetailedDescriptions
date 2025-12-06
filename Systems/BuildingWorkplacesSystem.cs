@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Colossal.Core;
 using Colossal.Entities;
 using Game.Prefabs;
 using Game.SceneFlow;
@@ -18,7 +19,7 @@ namespace DetailedDescriptions.Systems
                 All = new [] { ComponentType.ReadWrite<WorkplaceData>() }
             });
 
-            GameManager.instance.RegisterUpdater(AddTextToAllDescriptions);
+            MainThreadDispatcher.RegisterUpdater(AddTextToAllDescriptions);
             Mod.log.Info("BuildingWorkplacesSystem initialized");
         }
 

@@ -1,3 +1,4 @@
+using Colossal.Core;
 using Colossal.Entities;
 using DetailedDescriptions.Helpers;
 using Game.Prefabs;
@@ -27,8 +28,8 @@ namespace DetailedDescriptions.Systems
                 .WithAll<PublicTransportVehicleData>()
                 .WithNone<TrainCarriageData>()
                 .Build();
-
-            GameManager.instance.RegisterUpdater(AddTextToAllDescriptions);
+            
+            MainThreadDispatcher.RegisterUpdater(AddTextToAllDescriptions);
             Mod.log.Info("VehicleCapacitySystem initialized");
         }
 
@@ -36,8 +37,7 @@ namespace DetailedDescriptions.Systems
         {
             if (!Setting.Instance.ShowPublicTransportCapacity)
                 return;
-
-            Mod.log.Info("VehicleCapacitySystem AddTextToAllDescriptions");
+            
             var allVehiclePrefabs = _transportVehicles.ToEntityArray(Allocator.Temp);
             foreach (Entity entity in allVehiclePrefabs)
             {

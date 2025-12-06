@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using Colossal.IO.AssetDatabase;
 using DetailedDescriptions.Systems;
 using Colossal.Logging;
+using Colossal.PSI.Environment;
 using DetailedDescriptions.Helpers;
 using Game;
 using Game.Modding;
@@ -20,6 +22,8 @@ namespace DetailedDescriptions
         public void OnLoad(UpdateSystem updateSystem)
         {
             log.Info(nameof(OnLoad));
+            //log.effectivenessLevel = Level.Debug; // TODO: Remove debug
+            log.showsStackTraceAboveLevels = Level.Error;
 
             if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
                 log.Info($"Current mod asset at {asset.path}");
@@ -60,6 +64,17 @@ namespace DetailedDescriptions
             OnSettingsChanged?.Invoke();
             Mod.log.Debug("OnSettingsChanged called by ReloadActiveLocale");
             
+        }
+
+        public static void ExportAllLocalization()
+        {
+            var outputFile = Path.Combine(EnvPath.kUserDataPath, "ModsData", "DetailedDescriptionsExport.txt");
+            using StreamWriter writer = new StreamWriter(outputFile);
+            foreach (var entry in GameManager.instance.localizationManager.activeDictionary.entries)
+            {
+                writer.Write($"{entry.Key}={entry.Value}\r\n");
+            }
+            writer.Close();
         }
     }
 }
