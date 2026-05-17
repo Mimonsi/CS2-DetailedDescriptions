@@ -1,4 +1,5 @@
-﻿using Colossal.Localization;
+﻿using System;
+using Colossal.Localization;
 using Game;
 using Game.Prefabs;
 using Game.SceneFlow;
@@ -54,7 +55,11 @@ namespace DetailedDescriptions.Systems
     
         private void OnSettingsChanged()
         {
+            Mod.log.Info("Update called from OnSettingsChanged");
+            var startTime = DateTime.Now;
             AddTextToAllDescriptions();
+            var amount = DateTime.Now - startTime;
+            Mod.log.Info($"Update finished in {amount.TotalMilliseconds}ms");
         }
 
         private string lastLocale = string.Empty;
@@ -72,7 +77,11 @@ namespace DetailedDescriptions.Systems
 #if DEBUG
             Mod.log.Debug("OnActiveDictionaryChanged");
 #endif
+            Mod.log.Info("Update called from OnActiveDirectoryChanged");
+            var startTime = DateTime.Now;
             AddTextToAllDescriptions();
+            var amount = DateTime.Now - startTime;
+            Mod.log.Info($"Update finished in {amount.TotalMilliseconds}ms");
         }
         
         

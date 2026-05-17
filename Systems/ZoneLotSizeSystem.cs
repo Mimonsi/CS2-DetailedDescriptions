@@ -33,7 +33,7 @@ namespace DetailedDescriptions.Systems
         {
             if (!Setting.Instance.ShowZoneLotSizes) return;
             
-            Mod.log.Info("VehicleCapacitySystem AddTextToAllDescriptions");
+            Mod.log.Info("ZoneLotSizeSystem AddTextToAllDescriptions");
 
             ZoneLots.Clear();
             var allSpawnableBuildings = _spawnableBuildings.ToEntityArray(Allocator.Temp);
