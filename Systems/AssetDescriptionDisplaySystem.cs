@@ -34,7 +34,6 @@ namespace DetailedDescriptions.Systems
 
             LocalizationManager.onActiveDictionaryChanged += OnDictionaryChanged;
             Mod.OnSettingsChanged += OnSettingsChanged;
-            GameManager.instance.onGameLoadingComplete += HandleGameLoadingComplete;
 
             Mod.log.Info($"{GetType().Name} initialized");
         }
@@ -43,12 +42,12 @@ namespace DetailedDescriptions.Systems
         {
             LocalizationManager.onActiveDictionaryChanged -= OnDictionaryChanged;
             Mod.OnSettingsChanged -= OnSettingsChanged;
-            GameManager.instance.onGameLoadingComplete -= HandleGameLoadingComplete;
             base.OnDestroy();
         }
 
-        private void HandleGameLoadingComplete(Purpose purpose, GameMode mode)
+        protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
         {
+            base.OnGameLoadingComplete(purpose, mode);
             if (mode != GameMode.Game) return;
             _gameLoaded = true;
             TriggerUpdate();
