@@ -45,9 +45,9 @@ Thanks to StarQ for assisting with the implementation.
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/detailed-descriptions.1732226/" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.1.6" />
+	<ModVersion Value="1.1.7" />
 	<!--Recommended version of the base game to use the mod-->
-	<GameVersion Value="1.5.2*" />
+	<GameVersion Value="1.5*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Required DLC, can be set multiple times. Supported values are "Landmark Buildings", "San Fransisco Set", "Beach Properties", "Urban Promenades", "Modern Architecture"-->
@@ -57,6 +57,7 @@ Thanks to StarQ for assisting with the implementation.
 	<ChangeLog>
 - Large loading time improvement: Fixed complete re-calculation of all descriptions on every asset update, should save several seconds on each load.
 - Descriptions are now updated when loading savegame, ensuring that all assets are loaded by then
+- Fixed China pack not being correctly updated
 	</ChangeLog>
 	<!--External link, can be set multiple times. supported types are "discord", "github", "youtube", "twitch", "x", "paypal", "patreon", "buymeacoffee", "kofi", "crowdin", "gitlab", "gofundme"-->
 	<ExternalLink Type="github" Url="https://github.com/Mimonsi/CS2-DetailedDescriptions" />
