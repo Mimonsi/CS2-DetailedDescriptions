@@ -1,29 +1,40 @@
-﻿using System;
+using System.Diagnostics;
+using Colossal.Core;
 using Colossal.Localization;
 using Game;
 using Game.Prefabs;
 using Game.SceneFlow;
-using Game.UI.Menu;
 using Unity.Entities;
 
 namespace DetailedDescriptions.Systems
 {
-    public partial class AssetDescriptionDisplaySystem : GameSystemBase
+    public abstract partial class AssetDescriptionDisplaySystem : GameSystemBase
     {
         protected PrefabSystem PrefabSystem;
         protected LocalizationManager LocalizationManager;
+
+        protected abstract bool IsEnabled { get; }
+        protected abstract void AddTextToAllDescriptions();
+
         protected override void OnCreate()
         {
             base.OnCreate();
             PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
             LocalizationManager = GameManager.instance.localizationManager;
-            LocalizationManager.onActiveDictionaryChanged += OnActiveDictionaryChanged;
-            Mod.OnSettingsChanged += OnSettingsChanged;
+
+            LocalizationManager.onActiveDictionaryChanged += TriggerUpdate;
+            Mod.OnSettingsChanged += TriggerUpdate;
+            MainThreadDispatcher.RegisterUpdater(TriggerUpdate);
+
+            Mod.log.Info($"{GetType().Name} initialized");
         }
 
-        protected virtual void AddTextToAllDescriptions()
+        private void TriggerUpdate()
         {
-
+            if (!IsEnabled) return;
+            var sw = Stopwatch.StartNew();
+            AddTextToAllDescriptions();
+            Mod.log.Debug($"{GetType().Name} updated in {sw.Elapsed.TotalMilliseconds:0.##}ms");
         }
 
         protected void AddTextToName(string prefabName, string text, string separator = " ")
@@ -31,9 +42,8 @@ namespace DetailedDescriptions.Systems
             if (LocalizationManager.activeDictionary.TryGetValue($"Assets.NAME[{prefabName}]", out var entry))
             {
                 if (string.IsNullOrEmpty(entry)) return;
-                string newDescription = $"{entry}{separator}{text}";
                 if (entry.Contains(text)) return;
-                LocalizationManager.activeDictionary.Add($"Assets.NAME[{prefabName}]", newDescription);
+                LocalizationManager.activeDictionary.Add($"Assets.NAME[{prefabName}]", $"{entry}{separator}{text}");
             }
         }
 
@@ -42,52 +52,15 @@ namespace DetailedDescriptions.Systems
             if (LocalizationManager.activeDictionary.TryGetValue($"Assets.DESCRIPTION[{prefabName}]", out var entry))
             {
                 if (string.IsNullOrEmpty(entry)) return;
-                string newDescription = $"{entry}\r\n{text}";
                 if (entry.Contains(text)) return;
-                LocalizationManager.activeDictionary.Add($"Assets.DESCRIPTION[{prefabName}]", newDescription);
+                LocalizationManager.activeDictionary.Add($"Assets.DESCRIPTION[{prefabName}]", $"{entry}\r\n{text}");
             }
-            else
+            else if (debugOutput)
             {
-                if (debugOutput)
-                    Mod.log.Warn($"Could not get description for prefab: '{prefabName}'");
+                Mod.log.Warn($"Could not get description for prefab: '{prefabName}'");
             }
         }
-    
-        private void OnSettingsChanged()
-        {
-            Mod.log.Info("Update called from OnSettingsChanged");
-            var startTime = DateTime.Now;
-            AddTextToAllDescriptions();
-            var amount = DateTime.Now - startTime;
-            Mod.log.Info($"Update finished in {amount.TotalMilliseconds}ms");
-        }
 
-        private string lastLocale = string.Empty;
-
-        private void OnActiveDictionaryChanged()
-        {
-            string currentLocale = GameManager
-                .instance
-                .localizationManager
-                .activeDictionary
-                .localeID;
-            //if (lastLocale == currentLocale)
-            //    return;
-            lastLocale = currentLocale;
-#if DEBUG
-            Mod.log.Debug("OnActiveDictionaryChanged");
-#endif
-            Mod.log.Info("Update called from OnActiveDirectoryChanged");
-            var startTime = DateTime.Now;
-            AddTextToAllDescriptions();
-            var amount = DateTime.Now - startTime;
-            Mod.log.Info($"Update finished in {amount.TotalMilliseconds}ms");
-        }
-        
-        
-        protected override void OnUpdate()
-        {
-        
-        }
+        protected override void OnUpdate() { }
     }
 }

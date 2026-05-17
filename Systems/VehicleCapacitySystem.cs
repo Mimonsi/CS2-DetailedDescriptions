@@ -1,4 +1,3 @@
-using Colossal.Core;
 using Colossal.Entities;
 using DetailedDescriptions.Helpers;
 using Game.Prefabs;
@@ -13,67 +12,41 @@ namespace DetailedDescriptions.Systems
     {
         private EntityQuery _transportVehicles;
 
+        protected override bool IsEnabled => Setting.Instance.ShowPublicTransportCapacity;
+
         protected override void OnCreate()
         {
             base.OnCreate();
-
-            //_transportVehicles = GetEntityQuery(
-            //    new EntityQueryDesc()
-            //    {
-            //        All = new[] { ComponentType.ReadWrite<PublicTransportVehicleData>() }
-            //    }
-            //);
             _transportVehicles = SystemAPI
                 .QueryBuilder()
                 .WithAll<PublicTransportVehicleData>()
                 .WithNone<TrainCarriageData>()
                 .Build();
-            
-            MainThreadDispatcher.RegisterUpdater(AddTextToAllDescriptions);
-            Mod.log.Info("VehicleCapacitySystem initialized");
         }
 
         protected override void AddTextToAllDescriptions()
         {
-            if (!Setting.Instance.ShowPublicTransportCapacity)
-                return;
-            
             var allVehiclePrefabs = _transportVehicles.ToEntityArray(Allocator.Temp);
             foreach (Entity entity in allVehiclePrefabs)
             {
                 if (!EntityManager.TryGetComponent(entity, out PublicTransportVehicleData data))
                     continue;
                 string prefabName = PrefabSystem.GetPrefabName(entity);
-                if (
-                    !GameManager.instance.localizationManager.activeDictionary.TryGetValue(
-                        $"Assets.NAME[{prefabName}]",
-                        out string localeName
-                    )
-                )
+                if (!GameManager.instance.localizationManager.activeDictionary.TryGetValue(
+                        $"Assets.NAME[{prefabName}]", out string localeName))
                     continue;
 
                 int2 passenger = 0;
 
-                if (
-                    EntityManager.HasBuffer<VehicleCarriageElement>(entity)
-                    && EntityManager.TryGetBuffer(
-                        entity,
-                        true,
-                        out DynamicBuffer<VehicleCarriageElement> buffer
-                    )
-                )
+                if (EntityManager.HasBuffer<VehicleCarriageElement>(entity)
+                    && EntityManager.TryGetBuffer(entity, true, out DynamicBuffer<VehicleCarriageElement> buffer))
                 {
                     passenger.x += data.m_PassengerCapacity;
                     passenger.y += data.m_PassengerCapacity;
                     for (int i = 0; i < buffer.Length; i++)
                     {
                         var carriage = buffer[i];
-                        if (
-                            EntityManager.TryGetComponent(
-                                carriage.m_Prefab,
-                                out PublicTransportVehicleData data2
-                            )
-                        )
+                        if (EntityManager.TryGetComponent(carriage.m_Prefab, out PublicTransportVehicleData data2))
                         {
                             passenger.x += carriage.m_Count.x * data2.m_PassengerCapacity;
                             passenger.y += carriage.m_Count.y * data2.m_PassengerCapacity;
@@ -92,23 +65,15 @@ namespace DetailedDescriptions.Systems
                     passenger.y *= data3.m_Count.y;
                 }
 
-                //Mod.log.Info($"{localeName}: {capacity.x},{capacity.y}");
-                string amount = $"{passenger.x} - {passenger.y}";
-                if (passenger.x == passenger.y)
-                    amount = $"{passenger.x}";
+                string amount = passenger.x == passenger.y
+                    ? $"{passenger.x}"
+                    : $"{passenger.x} - {passenger.y}";
 
-                if (
-                    (
-                        Setting.Instance.AvoidPublicTransportCapacityDuplication
-                        && localeName.Contains(amount)
-                    )
-                    || passenger.x <= 0
-                )
-                    // Don't add capacity if it's already in the name in some way
+                if ((Setting.Instance.AvoidPublicTransportCapacityDuplication && localeName.Contains(amount))
+                    || passenger.x <= 0)
                     continue;
-                
-                string format = Setting.Instance.PublicTransportCapacityFormat;
 
+                string format = Setting.Instance.PublicTransportCapacityFormat;
                 string text = format
                     .Replace("{capacity}", LocaleHelper.Translate("InfoPanels.CAPACITY")?.Replace(":", "") ?? "Capacity")
                     .Replace("{passengers}", LocaleHelper.Translate("SelectedInfoPanel.PASSENGERS_TITLE") ?? "Passengers")
@@ -117,7 +82,5 @@ namespace DetailedDescriptions.Systems
                 AddTextToName(prefabName, text);
             }
         }
-
-        protected override void OnUpdate() { }
     }
 }

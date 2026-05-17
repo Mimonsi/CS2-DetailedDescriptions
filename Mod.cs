@@ -21,8 +21,7 @@ namespace DetailedDescriptions
 
         public void OnLoad(UpdateSystem updateSystem)
         {
-            log.Info(nameof(OnLoad));
-            //log.effectivenessLevel = Level.Debug; // TODO: Remove debug
+            log.effectivenessLevel = Level.Debug; // TODO: Remove debug
             log.showsStackTraceAboveLevels = Level.Error;
 
             if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
