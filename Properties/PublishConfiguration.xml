@@ -55,7 +55,8 @@ Thanks to StarQ for assisting with the implementation.
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<!--<ChangeLog Value="" />-->
 	<ChangeLog>
-- Compatibility update for patch 1.5.2f1
+- Large loading time improvement: Fixed complete re-calculation of all descriptions on every asset update, should save several seconds on each load.
+- Descriptions are now updated when loading savegame, ensuring that all assets are loaded by then
 	</ChangeLog>
 	<!--External link, can be set multiple times. supported types are "discord", "github", "youtube", "twitch", "x", "paypal", "patreon", "buymeacoffee", "kofi", "crowdin", "gitlab", "gofundme"-->
 	<ExternalLink Type="github" Url="https://github.com/Mimonsi/CS2-DetailedDescriptions" />

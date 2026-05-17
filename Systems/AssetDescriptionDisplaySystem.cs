@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Colossal.Core;
 using Colossal.Localization;
+using Colossal.Serialization.Entities;
 using Game;
 using Game.Prefabs;
 using Game.SceneFlow;
@@ -13,6 +14,8 @@ namespace DetailedDescriptions.Systems
         protected PrefabSystem PrefabSystem;
         protected LocalizationManager LocalizationManager;
 
+        private static bool _gameLoaded;
+
         protected abstract bool IsEnabled { get; }
         protected abstract void AddTextToAllDescriptions();
 
@@ -22,11 +25,28 @@ namespace DetailedDescriptions.Systems
             PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
             LocalizationManager = GameManager.instance.localizationManager;
 
-            LocalizationManager.onActiveDictionaryChanged += TriggerUpdate;
+            LocalizationManager.onActiveDictionaryChanged += OnDictionaryChanged;
             Mod.OnSettingsChanged += TriggerUpdate;
-            MainThreadDispatcher.RegisterUpdater(TriggerUpdate);
+            GameManager.instance.onGameLoadingComplete += OnGameLoadingComplete;
 
             Mod.log.Info($"{GetType().Name} initialized");
+        }
+
+        private void OnGameLoadingComplete(Purpose purpose, GameMode mode)
+        {
+            if (mode != GameMode.Game) return;
+            //Mod.log.Info("Savegame loading complete");
+            _gameLoaded = true;
+            TriggerUpdate();
+        }
+
+        private void OnDictionaryChanged()
+        {
+            // Before the game finishes loading the dictionary changes constantly
+            // as assets stream in. Processing each one is wasted work because
+            // descriptions aren't visible in the main menu anyway.
+            if (!_gameLoaded) return;
+            TriggerUpdate();
         }
 
         private void TriggerUpdate()

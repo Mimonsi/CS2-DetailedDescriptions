@@ -12,7 +12,8 @@ namespace DetailedDescriptions.Systems
         private readonly Dictionary<string, List<(int, int)>> _zoneLots = new();
 
         protected override bool IsEnabled => Setting.Instance.ShowZoneLotSizes;
-
+        private int _lastBuildingCount = -1;
+        
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -24,8 +25,14 @@ namespace DetailedDescriptions.Systems
 
         protected override void AddTextToAllDescriptions()
         {
-            _zoneLots.Clear();
             var allSpawnableBuildings = _spawnableBuildings.ToEntityArray(Allocator.Temp);
+            if (allSpawnableBuildings.Length == _lastBuildingCount)
+            {
+                Mod.log.Debug("Skipping update due to unchanged building count: " + _lastBuildingCount);
+                return;
+            }
+            _lastBuildingCount = allSpawnableBuildings.Length;
+            _zoneLots.Clear();
             foreach (Entity entity in allSpawnableBuildings)
             {
                 if (!PrefabSystem.TryGetPrefab(entity, out PrefabBase prefabBase) || prefabBase is null)
