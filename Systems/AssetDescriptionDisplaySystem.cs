@@ -1,11 +1,9 @@
 using System.Diagnostics;
-using Colossal.Core;
 using Colossal.Localization;
 using Colossal.Serialization.Entities;
 using Game;
 using Game.Prefabs;
 using Game.SceneFlow;
-using Unity.Entities;
 
 namespace DetailedDescriptions.Systems
 {
@@ -15,27 +13,43 @@ namespace DetailedDescriptions.Systems
         protected LocalizationManager LocalizationManager;
 
         private static bool _gameLoaded;
+        private string _lastLocale;
 
         protected abstract bool IsEnabled { get; }
         protected abstract void AddTextToAllDescriptions();
+
+        /// <summary>
+        /// Override in subclasses that keep a "skip if unchanged" cache, so it can be
+        /// reset when locale or settings change (which require a full re-run even if
+        /// the entity count is identical).
+        /// </summary>
+        protected virtual void InvalidateCache() { }
 
         protected override void OnCreate()
         {
             base.OnCreate();
             PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
             LocalizationManager = GameManager.instance.localizationManager;
+            _lastLocale = LocalizationManager.activeDictionary.localeID;
 
             LocalizationManager.onActiveDictionaryChanged += OnDictionaryChanged;
-            Mod.OnSettingsChanged += TriggerUpdate;
-            GameManager.instance.onGameLoadingComplete += OnGameLoadingComplete;
+            Mod.OnSettingsChanged += OnSettingsChanged;
+            GameManager.instance.onGameLoadingComplete += HandleGameLoadingComplete;
 
             Mod.log.Info($"{GetType().Name} initialized");
         }
 
-        private void OnGameLoadingComplete(Purpose purpose, GameMode mode)
+        protected override void OnDestroy()
+        {
+            LocalizationManager.onActiveDictionaryChanged -= OnDictionaryChanged;
+            Mod.OnSettingsChanged -= OnSettingsChanged;
+            GameManager.instance.onGameLoadingComplete -= HandleGameLoadingComplete;
+            base.OnDestroy();
+        }
+
+        private void HandleGameLoadingComplete(Purpose purpose, GameMode mode)
         {
             if (mode != GameMode.Game) return;
-            //Mod.log.Info("Savegame loading complete");
             _gameLoaded = true;
             TriggerUpdate();
         }
@@ -46,6 +60,24 @@ namespace DetailedDescriptions.Systems
             // as assets stream in. Processing each one is wasted work because
             // descriptions aren't visible in the main menu anyway.
             if (!_gameLoaded) return;
+
+            // A genuine locale switch means previously-written texts are now in the
+            // wrong language and must be regenerated. Bypass any subclass cache.
+            var current = LocalizationManager.activeDictionary.localeID;
+            if (_lastLocale != current)
+            {
+                _lastLocale = current;
+                InvalidateCache();
+            }
+
+            TriggerUpdate();
+        }
+
+        private void OnSettingsChanged()
+        {
+            // Unit toggles etc. change the rendered text, so existing cached output
+            // is stale even if the entity count is unchanged.
+            InvalidateCache();
             TriggerUpdate();
         }
 

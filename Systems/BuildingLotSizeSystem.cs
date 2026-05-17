@@ -9,8 +9,11 @@ namespace DetailedDescriptions.Systems
     public partial class BuildingLotSizeSystem : AssetDescriptionDisplaySystem
     {
         private EntityQuery _buildingsQuery;
+        private int _lastBuildingCount = -1;
 
         protected override bool IsEnabled => Setting.Instance.ShowBuildingLotSizes;
+
+        protected override void InvalidateCache() => _lastBuildingCount = -1;
 
         protected override void OnCreate()
         {
@@ -24,6 +27,10 @@ namespace DetailedDescriptions.Systems
         protected override void AddTextToAllDescriptions()
         {
             var buildings = _buildingsQuery.ToEntityArray(Allocator.Temp);
+            if (buildings.Length == _lastBuildingCount)
+                return;
+            _lastBuildingCount = buildings.Length;
+
             foreach (Entity entity in buildings)
             {
                 if (!EntityManager.TryGetComponent(entity, out BuildingData buildingData))

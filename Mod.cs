@@ -55,6 +55,14 @@ namespace DetailedDescriptions
         public void OnDispose()
         {
             log.Info(nameof(OnDispose));
+            if (m_Setting != null)
+            {
+                m_Setting.onSettingsApplied -= ApplySettingsChanged;
+                m_Setting.UnregisterInOptionsUI();
+            }
+            // Clear remaining subscribers so a mod reload starts from a clean slate
+            // instead of inheriting handlers from now-destroyed system instances.
+            OnSettingsChanged = null;
         }
 
         public static void ReloadActiveLocale()

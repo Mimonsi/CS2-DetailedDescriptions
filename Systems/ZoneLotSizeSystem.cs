@@ -13,7 +13,9 @@ namespace DetailedDescriptions.Systems
 
         protected override bool IsEnabled => Setting.Instance.ShowZoneLotSizes;
         private int _lastBuildingCount = -1;
-        
+
+        protected override void InvalidateCache() => _lastBuildingCount = -1;
+
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -28,7 +30,7 @@ namespace DetailedDescriptions.Systems
             var allSpawnableBuildings = _spawnableBuildings.ToEntityArray(Allocator.Temp);
             if (allSpawnableBuildings.Length == _lastBuildingCount)
             {
-                Mod.log.Debug("Skipping update due to unchanged building count: " + _lastBuildingCount);
+                Mod.log.Trace("Skipping update due to unchanged building count: " + _lastBuildingCount);
                 return;
             }
             _lastBuildingCount = allSpawnableBuildings.Length;
